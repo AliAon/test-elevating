@@ -1,0 +1,227 @@
+{
+  "info": {
+    "name": "ES Pulse – Service Contracts",
+    "_postman_id": "es-pulse-service-contracts-v1",
+    "description": "All CRUD and dashboard endpoints for Service Contracts, including the new KPI settings fields (Response Time, Maintenance, Repeat Callbacks, Availability).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",      "value": "http://localhost:3000",                          "type": "string" },
+    { "key": "token",        "value": "YOUR_JWT_TOKEN_HERE",                            "type": "string" },
+    { "key": "contractId",   "value": "CONTRACT_UUID_HERE",                             "type": "string" },
+    { "key": "clientId",     "value": "CLIENT_UUID_HERE",                               "type": "string" },
+    { "key": "subId",        "value": "ES_SUBSCRIPTION_UUID_HERE",                      "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Create Service Contract",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "client_id",        "value": "{{clientId}}",             "type": "text" },
+            { "key": "contract_number",  "value": "SC-2026-001",              "type": "text" },
+            { "key": "contract_name",    "value": "Annual Maintenance 2026",  "type": "text" },
+            { "key": "es_subscription_id", "value": "{{subId}}",             "type": "text" },
+            { "key": "start_date",       "value": "2026-01-01",               "type": "text" },
+            { "key": "end_date",         "value": "2026-12-31",               "type": "text" },
+            { "key": "active",           "value": "true",                     "type": "text" },
+            { "key": "building_ids",     "value": "[\"BUILDING_UUID_1\",\"BUILDING_UUID_2\"]", "type": "text" },
+            { "key": "level1_ids",       "value": "[\"LEVEL1_UUID\"]",        "type": "text" },
+            { "key": "level2_ids",       "value": "[\"LEVEL2_UUID\"]",        "type": "text" },
+            { "key": "group_ids",        "value": "[\"GROUP_UUID\"]",         "type": "text" },
+            {
+              "key": "service_provider_details",
+              "value": "{\"service_provider_name\":\"ACME Elevators\",\"contact_person_name\":\"John Doe\",\"country_code\":\"+1\",\"phone_no\":\"5551234567\",\"email\":\"john@acme.com\"}",
+              "type": "text"
+            },
+            {
+              "key": "plan_and_pricing",
+              "value": "{\"contract_type\":\"Full Maintenance\",\"contract_price\":50000,\"next_fee_adjustment_rate\":\"3%\",\"next_fee_adjustment_date\":\"2026-07-01\"}",
+              "type": "text"
+            },
+            {
+              "key": "contract_kpis",
+              "value": "{\"maintenance_visit_per_equipment\":4,\"annual_safety_test_report\":1,\"rate_of_breakdown\":5,\"minor_response_time\":4}",
+              "type": "text"
+            },
+            {
+              "key": "equipment_kpis",
+              "value": "{\"business_hours_response_time\":4,\"after_hours_response_time\":8,\"annual_man_trapped_event\":0,\"equipment_availability_target\":99}",
+              "type": "text"
+            },
+            {
+              "key": "kpi_settings",
+              "value": "{\"response_time\":{\"target\":95,\"penalty_rate\":0.5,\"target_interval\":\"monthly\"},\"maintenance\":{\"target\":100,\"penalty_rate\":1.0,\"target_interval\":\"quarterly\"},\"repeat_callbacks\":{\"target\":5,\"penalty_rate\":0.25,\"target_interval\":\"monthly\"},\"availability\":{\"target\":99,\"penalty_rate\":2.0,\"target_interval\":\"monthly\"}}",
+              "type": "text"
+            },
+            {
+              "key": "business_hours_response_time",
+              "value": "{\"entrapment\":{\"attendance_next_business_day\":false,\"hours\":1},\"criticalEquipmentStopped\":{\"attendance_next_business_day\":false,\"hours\":4},\"nonCriticalEquipmentStopped\":{\"attendance_next_business_day\":true,\"hours\":8},\"operationalIntermittentFaults\":{\"attendance_next_business_day\":true,\"hours\":24},\"nonOperationalOrAestheticFaults\":{\"attendance_next_business_day\":true,\"hours\":48}}",
+              "type": "text"
+            },
+            {
+              "key": "after_hours_response_time",
+              "value": "{\"entrapment\":{\"attendance_next_business_day\":false,\"hours\":1},\"criticalEquipmentStopped\":{\"attendance_next_business_day\":false,\"hours\":8},\"nonCriticalEquipmentStopped\":{\"attendance_next_business_day\":true,\"hours\":12},\"operationalIntermittentFaults\":{\"attendance_next_business_day\":true,\"hours\":48},\"nonOperationalOrAestheticFaults\":{\"attendance_next_business_day\":true,\"hours\":72}}",
+              "type": "text"
+            },
+            {
+              "key": "service_api_credentials",
+              "value": "{\"client_id\":\"API_CLIENT_ID\",\"client_secret\":\"API_CLIENT_SECRET\",\"brand_id\":\"BRAND_UUID\",\"grant_type\":\"client_credentials\",\"scope\":\"openid\",\"ocp_apim_subscription_key\":\"OCP_KEY\"}",
+              "type": "text"
+            },
+            {
+              "key": "contract_terms_file",
+              "type": "file",
+              "src": "",
+              "description": "Optional: attach a PDF/DOC contract terms file"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts"]
+        },
+        "description": "Creates a new service contract. Body is multipart/form-data. All object fields (kpi_settings, plan_and_pricing, etc.) must be JSON-stringified strings. Optionally attach a contract terms file."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Service Contract",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "contract_name",  "value": "Annual Maintenance 2026 – Revised", "type": "text" },
+            { "key": "active",         "value": "true",                               "type": "text" },
+            { "key": "end_date",       "value": "2026-12-31",                         "type": "text" },
+            {
+              "key": "plan_and_pricing",
+              "value": "{\"contract_type\":\"Full Maintenance\",\"contract_price\":55000,\"next_fee_adjustment_rate\":\"3%\"}",
+              "type": "text"
+            },
+            {
+              "key": "kpi_settings",
+              "value": "{\"response_time\":{\"target\":95,\"penalty_rate\":0.5,\"target_interval\":\"monthly\"},\"maintenance\":{\"target\":100,\"penalty_rate\":1.0,\"target_interval\":\"quarterly\"},\"repeat_callbacks\":{\"target\":5,\"penalty_rate\":0.25,\"target_interval\":\"monthly\"},\"availability\":{\"target\":99,\"penalty_rate\":2.0,\"target_interval\":\"monthly\"}}",
+              "type": "text"
+            },
+            {
+              "key": "contract_kpis",
+              "value": "{\"maintenance_visit_per_equipment\":4,\"annual_safety_test_report\":1,\"rate_of_breakdown\":5,\"minor_response_time\":4}",
+              "type": "text"
+            },
+            {
+              "key": "equipment_kpis",
+              "value": "{\"business_hours_response_time\":4,\"after_hours_response_time\":8,\"annual_man_trapped_event\":0,\"equipment_availability_target\":99}",
+              "type": "text"
+            },
+            {
+              "key": "contract_terms_file",
+              "type": "file",
+              "src": "",
+              "description": "Optional: replace the existing contract terms file"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts/{{contractId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts", "{{contractId}}"]
+        },
+        "description": "Updates an existing service contract. Only include fields you want to change. Requires Admin role."
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Service Contracts",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts?page=1&limit=10&es_subscription_id={{subId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts"],
+          "query": [
+            { "key": "page",                "value": "1",            "description": "Page number" },
+            { "key": "limit",               "value": "10",           "description": "Items per page" },
+            { "key": "search",              "value": "",             "description": "Search by contract name/number",       "disabled": true },
+            { "key": "clientId",            "value": "{{clientId}}", "description": "Filter by client UUID",               "disabled": true },
+            { "key": "es_subscription_id",  "value": "{{subId}}",    "description": "Filter by ES subscription UUID" },
+            { "key": "active",              "value": "true",         "description": "Filter by active status (true/false)", "disabled": true },
+            { "key": "contractType",        "value": "",             "description": "Filter by contract type",             "disabled": true },
+            { "key": "startDate",           "value": "",             "description": "Filter contracts starting from date",  "disabled": true },
+            { "key": "endDate",             "value": "",             "description": "Filter contracts ending before date",  "disabled": true },
+            { "key": "buildingIds",         "value": "",             "description": "Comma-separated building UUIDs",       "disabled": true },
+            { "key": "brand_id",            "value": "",             "description": "Filter by brand UUID",                "disabled": true }
+          ]
+        },
+        "description": "Get all service contracts with optional filtering and pagination."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Service Contract by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts/{{contractId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts", "{{contractId}}"]
+        },
+        "description": "Fetch a single service contract by its UUID."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Service Contracts by Client ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts/client/{{clientId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts", "client", "{{clientId}}"]
+        },
+        "description": "Returns all service contracts belonging to a specific client."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Service Contract Dashboard Stats",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/service-contracts/client/dashboard/{{subId}}?level1=&level2=&level3=",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "service-contracts", "client", "dashboard", "{{subId}}"],
+          "query": [
+            { "key": "level1", "value": "", "description": "Optional Level 1 UUID filter", "disabled": true },
+            { "key": "level2", "value": "", "description": "Optional Level 2 UUID filter", "disabled": true },
+            { "key": "level3", "value": "", "description": "Optional Level 3 / Building UUID filter", "disabled": true }
+          ]
+        },
+        "description": "Returns aggregated service contract statistics for the dashboard, scoped to an ES subscription. Supports optional level hierarchy filters."
+      },
+      "response": []
+    }
+  ]
+}
